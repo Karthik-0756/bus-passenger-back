@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
-const bcrypt = require('bcrypt');
+var registSchema = require('../model/registSchema');
+var bcrypt = require('bcrypt');
 
 /* GET users listing. */
 router.post('/', async function(req, res, next) {

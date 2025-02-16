@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const routeSchema = require('../model/BusStop'); // Adjust the path if your model is in a different folder
+const routeSchema = require('../model/BusStop') // Adjust the path if your model is in a different folder
 
 // Add a New Bus Stop
 router.post('/add', async (req, res) => {
