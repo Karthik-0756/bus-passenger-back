@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var registSchema = require('../model/registSchema');
+
 const bcrypt = require('bcrypt');
 
 /* GET users listing. */
