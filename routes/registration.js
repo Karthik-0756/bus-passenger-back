@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var registSchema = require('../model/registSchema');
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const PassengerCount = require("../model/PassengerCountSchema"); 
 
 
