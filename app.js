@@ -16,7 +16,7 @@ const PassengerCount = require("./model/PassengerCountSchema");
 
 var app = express();
 const server = http.createServer(app);
-const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:3001", "https://passengercounting.vercel.app" ];
 
 app.use(cors({
   origin: function (origin, callback) {
