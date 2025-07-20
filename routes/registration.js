@@ -3,32 +3,33 @@ var router = express.Router();
 var registSchema = require('../model/registSchema');
 const bcrypt = require('bcryptjs');
 const PassengerCount = require("../model/PassengerCountSchema"); 
+const { v4: uuidv4 } = require('uuid'); // Add this at the to
 
 
 
 /* GET users listing. */
-router.post('/', async function(req, res, next) {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.Password, 10);
-        const data = new registSchema({
-            ...req.body,
-            Password: hashedPassword
-        });
-        await data.save();
-        console.log("data saved");
-        res.json({
-            status: 'success',
-            message: 'Data saved successfully'
-        });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({
-            status: 'error',
-            message: 'Failed to save data',
-            error: e.message
-        });
-    }
-});
+// router.post('/', async function(req, res, next) {
+//     try {
+//         const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+//         const data = new registSchema({
+//             ...req.body,
+//             Password: hashedPassword
+//         });
+//         await data.save();
+//         console.log("data saved");
+//         res.json({
+//             status: 'success',
+//             message: 'Data saved successfully'
+//         });
+//     } catch (e) {
+//         console.error(e);
+//         res.status(500).json({
+//             status: 'error',
+//             message: 'Failed to save data',
+//             error: e.message
+//         });
+//     }
+// });
 
 
 
@@ -107,21 +108,21 @@ router.get('/test', async (req, res) => {
 });
 
 
-
 router.post("/register", async function (req, res) {
     try {
-        const newConductor = new Conductor({
-            busId: uuidv4(), // Generate unique busId
-            ...req.body
+        const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+        const data = new registSchema({
+            ...req.body,
+            Password: hashedPassword,
+            busId: uuidv4() // Generate unique busId for each bus
         });
 
-        await newConductor.save();
-        res.status(201).json({ message: "Conductor registered successfully" });
+        await data.save();
+        res.status(201).json({ message: "Bus registered successfully", busId: data.busId });
     } catch (error) {
-        res.status(500).json({ message: "Error registering conductor", error });
+        res.status(500).json({ message: "Error registering bus", error });
     }
 });
-
 
 
 
