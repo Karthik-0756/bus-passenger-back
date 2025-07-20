@@ -34,62 +34,38 @@ const { v4: uuidv4 } = require('uuid'); // Add this at the to
 
 
 router.post("/login", async (req, res) => {
-    console.log("📩 Login Request Received:", req.body);
-
     const { UserName, Password } = req.body;
 
     if (!UserName || !Password) {
-        console.warn("⚠️ Missing Fields in Login Request");
         return res.status(400).json({ message: "All fields are required" });
     }
 
     try {
-        console.log("🔍 Searching for User:", UserName);
         const user = await registSchema.findOne({ UserName });
 
         if (!user) {
-            console.warn("❌ User Not Found:", UserName);
             return res.status(401).json({ valid: false, message: "User not found" });
         }
 
-        console.log("✅ User Found:", user);
-        console.log("🔍 Database User Object:", JSON.stringify(user, null, 2));
-
-        console.log("🔑 Checking Password...");
-        const isMatch = await bcrypt.compare(Password, user.Password);
-
-        if (!isMatch) {
-            console.warn("❌ Incorrect Password for User:", UserName);
+        // Compare plain text passwords
+        if (Password !== user.Password) {
             return res.status(401).json({ valid: false, message: "Invalid credentials" });
         }
 
-        console.log("✅ Password Verified!");
-
-        // ✅ Check if `busId` is present in the user object
-        if (!user.busId) {
-            console.warn("⚠️ busId is missing in the database record!");
-        } else {
-            console.log("🚍 Bus ID Found:", user.busId);
-        }
-
-        // ✅ Send busId in response
         const responsePayload = { 
             valid: true, 
             message: "Login successful",
-            busId: user.busId || null,  // Ensure null if undefined
+            busId: user.busId || null,
             busNumber: user.busNumber || "Unknown",
             busRoute: user.busRoute || "Unknown"
         };
 
-        console.log("📡 Sending Response:", responsePayload);
         res.status(200).json(responsePayload);
 
     } catch (error) {
-        console.error("❌ Error During Login:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 
 router.get("/", (req, res) => {
@@ -110,10 +86,10 @@ router.get('/test', async (req, res) => {
 
 router.post("/register", async function (req, res) {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+
         const data = new registSchema({
             ...req.body,
-            Password: hashedPassword,
+            
             busId: uuidv4() // Generate unique busId for each bus
         });
 
